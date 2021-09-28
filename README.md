@@ -11,10 +11,16 @@
 ## 统计代码量
 ##### Usage
 `config.py`文件包含统计脚本需要用到的配置信息  
-`run.py`脚本为代码量统计脚本，使用语法：
+`run.py`脚本为代码量统计脚本（多线程版本）  
+`run_sync.py`脚本为代码量统计脚本（同步调用版本）  
+##### 使用语法
 ```
 python3 run.py
 ```
+
+## 常见问题
+1.API返回`Retry later`错误，这是因为giblab接口默认有限速，解决方案为限制客户端的请求频率。    
+
 
 ## 致谢
 gitlab_code_statistics初版参考了git-status项目。  

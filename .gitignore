@@ -1,5 +1,9 @@
-# ide
+# self conf
+config_miaoyc.py
+
+# ide and system
 .idea
+.DS_Store
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
