@@ -8,15 +8,13 @@ Create date  : 2021/9/28 1:38 下午
 Description  :
 """
 
-import time
 import requests
 import os
 import json
-import threading
 import datetime
 from urllib import parse
 
-import config_miaoyc as config
+import config as config
 
 user_unknown = {}
 user_email_alias_mapping = {}
