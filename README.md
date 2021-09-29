@@ -18,6 +18,9 @@
 python3 run.py
 ```
 
+##### 运行效果
+![image](https://user-images.githubusercontent.com/2928791/135256781-564176b5-4892-486b-a2a4-a4be16d43335.png)
+
 ## 常见问题
 1.API返回`Retry later`错误，这是因为giblab接口默认有限速，解决方案为限制客户端的请求频率。    
 
