@@ -16,7 +16,7 @@ import threading
 import datetime
 from urllib import parse
 
-import config_miaoyc as config
+import config as config
 
 # 一个线程锁, 用于请求接口
 lock = threading.RLock()
