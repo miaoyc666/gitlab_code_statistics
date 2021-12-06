@@ -97,7 +97,7 @@ class GitlabApiCount:
             config.git_root_url, project_id, config.git_token)
         r1 = requests.get(url)  # 请求url，传入header，ssl认证为false
         if r1.content == b'Retry later\n':
-            # print("Exception branch: {0}->{1}".format(project_info.project_url, url))
+            print("Exception branch: {0}->{1}".format(project_info.project_url, url))
             return
         r2 = r1.json()  # 显示json字符串
         if not r2:
@@ -105,14 +105,6 @@ class GitlabApiCount:
         # branch的map，key为branch名称，value为按照提交者email汇总的，key为email的子map集合
         branch_map = {}
         # 主动获取master分支的提交
-        detail_map = None
-        while detail_map is None:
-            detail_map = self.get_commits(project_id, project_info.name, project_info.project_url, "master")
-            if detail_map is not None:
-                pass
-                # print("Success get_commits: {0}->{1}".format(project_info.name, "master"))
-        if detail_map:
-            branch_map['master'] = detail_map
         for r3 in r2:
             branch_name = r3['name']
             if branch_name is None:
@@ -172,7 +164,7 @@ class GitlabApiCount:
         )
         r1 = requests.get(url)
         if r1.content == b'Retry later\n':
-            # print("Exception get_commits: {0}->{1}".format(project_name, branch_name))
+            print("Exception get_commits: {0}->{1}".format(project_name, branch_name))
             return
         r2 = r1.json()  # 显示json字符串
         detail_map = {}
@@ -226,7 +218,6 @@ def get_commit_detail(project_id, commit_id):
         config.git_root_url,
         '/api/v4/projects/%s/repository/commits/%s?private_token=%s' % (project_id, commit_id, config.git_token)
     )
-    # print(url)
     r1 = requests.get(url)  # 请求url，传入header，ssl认证为false
     if r1.content == b'Retry later\n':
         print("Exception get_commit_detail: {0}".format(commit_id))
