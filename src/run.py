@@ -46,9 +46,7 @@ def dic_plus_one(dic, key):
 
 
 class GitlabApiCount:
-    """
-    Worker类
-    """
+
     # 所有commit的集合，用于去重，这里的重复，可能是代码merge造成的
     total_commit_map = {}
 

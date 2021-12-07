@@ -22,9 +22,7 @@ user_email_name_mapping = {}
 
 
 class GitlabApiCount:
-    """
-    Worker类
-    """
+
     # 所有commit的集合，用于去重，这里的重复，可能是代码merge造成的
     total_commit_map = {}
 
@@ -66,7 +64,7 @@ class GitlabApiCount:
                 project_info.project_desc = r3['description']
                 project_info.project_url = r3['web_url']
                 project_info.path = r3['path']
-                # 构件好线程
+                #
                 self.get_branches(r3['id'], project_info)
 
         # 数据聚合
@@ -83,7 +81,6 @@ class GitlabApiCount:
                     final_commit_map[detail.author_email] = exist_detail
         write_to_csv("%s/GitStatic_%s/%s_%s.csv" % (config.export_path, config.t_from, 'total', config.t_from),
                      final_commit_map, "extra")
-        return
 
     def get_branches(self, project_id, project_info):
         """
