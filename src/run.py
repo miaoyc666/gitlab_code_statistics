@@ -79,7 +79,7 @@ class GitlabApiCount:
                 if value is None:
                     continue
                 last_active_time = last_active_time.split('+')[0]
-                days = config.date_from - datetime.datetime.strptime(last_active_time, '%Y-%m-%dT%H:%M:%S.%f')
+                days = config.date_from - datetime.datetime.strptime(last_active_time, '%Y-%m-%dT%H:%M:%S.%fZ')
                 # 如果project的最后更新时间比起始时间小，则continue
                 if days.days > 1:
                     continue
