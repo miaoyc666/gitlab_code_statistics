@@ -72,6 +72,9 @@ class GitlabApiCount:
             r2 = r1.json()  # 显示json字符串
             for r3 in r2:
                 name_with_namespace = r3["name_with_namespace"]
+                if time.strptime(r3["last_activity_at"][:19], "%Y-%m-%dT%H:%M:%S") < \
+                        time.strptime(config.t_from, "%Y-%m-%d %H:%M:%S"):
+                    continue
                 if name_with_namespace not in config.valid_project:
                     continue
                 value = r3['default_branch']

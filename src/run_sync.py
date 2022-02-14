@@ -8,10 +8,11 @@ Create date  : 2021/9/28 1:38 下午
 Description  :
 """
 
-import requests
 import os
 import json
+import time
 import datetime
+import requests
 from urllib import parse
 
 import config as config
@@ -46,10 +47,11 @@ class GitlabApiCount:
             r1 = requests.get(url)  # 请求url，传入header，ssl认证为false
             r2 = r1.json()  # 显示json字符串
             for r3 in r2:
-                # todo: 添加根据last_activity_at时间来过滤项目
-                # print(r3["last_activity_at"], type(r3["last_activity_at"]))
                 name_with_namespace = r3["name_with_namespace"]
-                print(name_with_namespace)
+                if time.strptime(r3["last_activity_at"][:19], "%Y-%m-%dT%H:%M:%S") < \
+                        time.strptime(config.t_from, "%Y-%m-%d %H:%M:%S"):
+                    continue
+                print(name_with_namespace, r3["last_activity_at"][:19])
                 if name_with_namespace not in config.valid_project:
                     continue
                 value = r3['default_branch']
