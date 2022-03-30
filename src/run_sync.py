@@ -188,8 +188,8 @@ class GitlabApiCount:
                 if detail:
                     pass
                     # print("Success get_commit_detail: {0}->{1}".format(project_id, commit_id))
-            # 过滤异常数据，单次提交大于5000行的代码，可能是脚手架之类生成的代码，不做处理
-            if detail.total == 0 or detail.total > 5000:
+            # 过滤异常数据，单次提交大于20000行的代码，可能是脚手架之类生成的代码，不做处理
+            if detail.total == 0 or detail.total > 20000:
                 continue
             # 这里和主流程无关，是用来处理commit记录里的提交者，账号不规范的问题
             if detail.author_email in user_unknown:
