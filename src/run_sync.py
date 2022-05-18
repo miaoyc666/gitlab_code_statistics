@@ -51,7 +51,7 @@ class GitlabApiCount:
                 if time.strptime(r3["last_activity_at"][:19], "%Y-%m-%dT%H:%M:%S") < \
                         time.strptime(config.t_from, "%Y-%m-%d %H:%M:%S"):
                     continue
-                print(name_with_namespace, r3["last_activity_at"][:19])
+                # print(name_with_namespace)
                 if name_with_namespace not in config.valid_project:
                     continue
                 value = r3['default_branch']
@@ -94,8 +94,8 @@ class GitlabApiCount:
         :param project_info:
         :return:
         """
-        # 线上gitlab可用，问题是没有全部显示
-        url = '%s/api/v4/projects/%s/repository/branches?private_token=%s' % (
+        # 线上gitlab可用，问题是没有全部显示, 添加默认分页参数，每页 1000条数据
+        url = '%s/api/v4/projects/%s/repository/branches?private_token=%s&per_page=1000' % (
             config.git_root_url, project_id, config.git_token)
         r1 = requests.get(url)  # 请求url，传入header，ssl认证为false
         if r1.content == b'Retry later\n':
