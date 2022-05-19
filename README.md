@@ -9,11 +9,11 @@
 3. 点击`Create personal access token` , 生成的个人账号token。
 
 ## 统计代码量
-##### Usage
+##### 文件列表
 `config.py`文件包含统计脚本需要用到的配置信息  
 `run.py`脚本为代码量统计脚本（多线程版本，已删，早期代码tag内可以看到，不想维护两份代码了）  
 `run_sync.py`脚本为代码量统计脚本（同步调用版本）  
-##### 使用语法
+##### Usage
 ```
 python3 run.py
 ```
