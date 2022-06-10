@@ -51,7 +51,8 @@ class GitlabApiCount:
                 if time.strptime(r3["last_activity_at"][:19], "%Y-%m-%dT%H:%M:%S") < \
                         time.strptime(config.t_from, "%Y-%m-%d %H:%M:%S"):
                     continue
-                # print(name_with_namespace)
+                #print(name_with_namespace)
+                #continue
                 if name_with_namespace not in config.valid_project:
                     continue
                 value = r3['default_branch']
@@ -171,8 +172,8 @@ class GitlabApiCount:
         r2 = r1.json()  # 显示json字符串
         detail_map = {}
         for r3 in r2:
-            commit_id = r3['id']
-            if commit_id is None:
+            commit_id = r3.get("id")
+            if not commit_id:
                 continue
             # 在这里进行commit去重判断
             if self.total_commit_map.get(commit_id) is None:
