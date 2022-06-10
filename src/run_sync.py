@@ -172,6 +172,8 @@ class GitlabApiCount:
         r2 = r1.json()  # 显示json字符串
         detail_map = {}
         for r3 in r2:
+            if not isinstance(r3, dict):
+                continue
             commit_id = r3.get("id")
             if not commit_id:
                 continue
