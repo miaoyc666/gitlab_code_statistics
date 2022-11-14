@@ -10,7 +10,6 @@ Description  : 配置模板
 
 import datetime
 
-
 # gitlab仓库地址
 git_root_url = ""
 # 访问Token
@@ -22,9 +21,9 @@ t_from = ""
 # 统计的时间区间-结束日期
 t_end = ""
 # 统计的时间区间-开始日期，datetime对象
-date_from = datetime.datetime.strptime(t_from, '%Y-%m-%d')
+date_from = datetime.datetime.strptime(t_from, '%Y-%m-%d %H:%M:%S')
 # 统计的时间区间-结束日期，datetime对象
-date_end = datetime.datetime.strptime(t_end, '%Y-%m-%d')
+date_end = datetime.datetime.strptime(t_end, '%Y-%m-%d %H:%M:%S')
 
 # 待统计的仓库列表
 valid_project = [
