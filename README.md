@@ -1,4 +1,4 @@
-#Gitlab代码行数统计
+# Gitlab代码行数统计
 
 ## 环境依赖
 * python3
