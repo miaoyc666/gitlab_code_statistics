@@ -114,6 +114,7 @@ class GitlabApiCount:
                 continue
             # 如果仓库已经被Merge了，则不再处理
             if r3['merged']:
+                print("merged")
                 continue
             #
             detail_map = None
@@ -171,8 +172,10 @@ class GitlabApiCount:
             return
         r2 = r1.json()  # 显示json字符串
         detail_map = {}
+
         for r3 in r2:
             if not isinstance(r3, dict):
+                print("exception:", project_name, branch_name)
                 continue
             commit_id = r3.get("id")
             if not commit_id:
