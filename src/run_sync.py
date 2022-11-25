@@ -117,7 +117,7 @@ class GitlabApiCount:
                 continue
             # 如果仓库已经被Merge了，则不再处理
             if r3['merged']:
-                print("merged")
+                # print("merged")
                 continue
             #
             detail_map = None
