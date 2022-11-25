@@ -18,11 +18,11 @@
 `run_sync.py`脚本为代码量统计脚本（同步调用版本）  
 ##### Usage
 ```
-python3 run.py
+python3 run_sync.py
 ```
 
 ##### 运行效果
-![image](https://user-images.githubusercontent.com/2928791/135256781-564176b5-4892-486b-a2a4-a4be16d43335.png)
+<img width="765" alt="image" src="https://user-images.githubusercontent.com/2928791/203967770-62d78491-ac9a-4802-8f83-8301d5342079.png">
 
 ## 常见问题
 1.API返回`Retry later`错误，这是因为giblab接口默认有限速，解决方案为限制客户端的请求频率。    
