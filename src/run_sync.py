@@ -239,6 +239,9 @@ def get_commit_detail(project_id, commit_id):
 
     author_email, author_name = deduplicate_name(r2['author_email'], r2['author_name'])
     #
+    if config.author_filter and author_email not in config.author_filter_list:
+        return 3
+    #
     details = gitlab.CommitDetails()
     details.author_email = author_email
     details.author_name = author_name

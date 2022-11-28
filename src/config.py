@@ -28,3 +28,8 @@ date_end = datetime.datetime.strptime(t_end, '%Y-%m-%d %H:%M:%S')
 # 待统计的仓库列表
 valid_project = [
 ]
+
+# 是否开启author过滤
+author_filter = False
+# 过滤author列表
+author_filter_list = []
