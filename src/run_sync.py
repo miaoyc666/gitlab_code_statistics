@@ -118,6 +118,8 @@ class GitlabApiCount:
             branch_name = r3['name']
             if branch_name is None:
                 continue
+            if config.BRANCH_FILTER and branch_name not in config.branch_filter_list:
+                continue
             # 如果仓库已经被Merge了，则不再处理
             if r3['merged']:
                 # print("merged")
@@ -243,7 +245,7 @@ def get_commit_detail(project_id, commit_id):
 
     author_email, author_name = deduplicate_name(r2['author_email'], r2['author_name'])
     #
-    if config.author_filter and author_email not in config.author_filter_list:
+    if config.AUTHOR_FILTER and author_email not in config.author_filter_list:
         return 3
     #
     details = gitlab.CommitDetails()
