@@ -5,7 +5,7 @@
 File name    : run_sync.py
 Author       : miaoyc
 Create date  : 2021/9/28 13:38
-Update date  : 2022/11/25 11:23
+Update date  : 2023/3/13 10:23
 Description  :
 """
 
@@ -88,6 +88,7 @@ class GitlabApiCount:
                     exist_detail.total += detail.total
                     exist_detail.additions += detail.additions
                     exist_detail.deletions += detail.deletions
+                    exist_detail.commit_nums += detail.commit_nums
                     final_commit_map[detail.author_email] = exist_detail
 
         csv.write_to_csv("%s/GitStatic_%s/%s_%s.csv" % (config.export_path, config.t_from, 'total', config.t_from),
@@ -98,7 +99,7 @@ class GitlabApiCount:
         获取仓库的所有Branch，并汇总commit到一个map梨
         :param project_id:
         :param project_info:
-        :return:
+        :return:cd
         """
         # 线上gitlab可用，问题是没有全部显示, 添加默认分页参数，每页 1000条数据
         url = '%s/api/v4/projects/%s/repository/branches?private_token=%s&per_page=1000' % (
@@ -141,6 +142,7 @@ class GitlabApiCount:
                     exist_detail.total += detail.total
                     exist_detail.additions += detail.additions
                     exist_detail.deletions += detail.deletions
+                    exist_detail.commit_nums += detail.commit_nums
                     final_commit_map[detail.author_email] = exist_detail
 
         if not final_commit_map:
@@ -257,6 +259,7 @@ def deduplicate_name(email, name):
     """
     针对提交邮箱去重，同一邮箱可能存在多个不同提交用户的提交，返回第一次查询到的提交用户名
     :param email:
+    :param name:
     :return:
     """
     if g_email_2_name.get(email):
