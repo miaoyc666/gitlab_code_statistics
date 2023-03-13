@@ -53,8 +53,10 @@ class GitlabApiCount:
                 if time.strptime(r3["last_activity_at"][:19], "%Y-%m-%dT%H:%M:%S") < \
                         time.strptime(config.t_from, "%Y-%m-%d %H:%M:%S"):
                     continue
-                #print('"{0}",'.format(name_with_namespace))
-                #continue
+
+                if config.PRINT_BRANCH_NAME:
+                    print('"{0}",'.format(name_with_namespace))
+                    continue
                 if name_with_namespace not in config.valid_project:
                     continue
                 value = r3['default_branch']
