@@ -4,8 +4,8 @@
 """
 File name    : config.py
 Author       : miaoyc
-Create date  : 2021/9/28 1:38 下午
-Update date  : 2023/3/13 2:53 下午
+Create date  : 2021/9/28 13:38
+Update date  : 2023/5/29 17:17
 Description  : 配置模板
 """
 
@@ -27,14 +27,17 @@ date_from = datetime.datetime.strptime(t_from, '%Y-%m-%d %H:%M:%S')
 date_end = datetime.datetime.strptime(t_end, '%Y-%m-%d %H:%M:%S')
 # 仅打印仓库列表
 PRINT_BRANCH_NAME = False
+
 # 待统计的仓库列表
 valid_project = [
 ]
-# 是否开启author过滤
+
+# 是否开启author过滤，白名单机制
 AUTHOR_FILTER = False
 # 过滤author列表
 author_filter_list = []
-# 是否开启branch过滤
+
+# 是否开启branch过滤，白名单机制
 BRANCH_FILTER = False
 # 过滤branch列表
 branch_filter_list = [
