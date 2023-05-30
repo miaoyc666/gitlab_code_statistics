@@ -55,7 +55,12 @@ class GitlabApiCount:
                     continue
 
                 if config.PRINT_BRANCH_NAME:
-                    print('"{0}",'.format(name_with_namespace))
+                    if config.FILTER_BRANCH_KEY:
+                        for key in config.FILTER_BRANCH_KEY:
+                            if key in name_with_namespace:
+                                print('"{0}",'.format(name_with_namespace))
+                    else:
+                        print('"{0}",'.format(name_with_namespace))
                     continue
                 if name_with_namespace not in config.valid_project:
                     continue
