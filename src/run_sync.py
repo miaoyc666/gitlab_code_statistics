@@ -5,7 +5,7 @@
 File name    : run_sync.py
 Author       : miaoyc
 Create date  : 2021/9/28 13:38
-Update date  : 2023/3/13 10:23
+Update date  : 2023/5/31 12:23
 Description  :
 """
 
@@ -173,55 +173,77 @@ class GitlabApiCount:
         :param branch_name:
         :return: dict<email, CommitDetails>
         """
+        def _gen_commits_url(page):
+            """
+            生成查询commits信息url
+            :param page:
+            :return:
+            """
+            _url = parse.urljoin(
+                config.git_root_url,
+                "/api/v4/projects/{0}/repository/commits?"
+                "page={1}&per_page=100&ref_name={2}&since={3}&until={4}&private_token={5}".format(
+                    project_id, page, branch_name, since_date, until_date, config.git_token)
+            )
+            return _url
+
+        def _get_commits_per_page(url_):
+            """
+            获取指定仓库，指定分支的所有commits，分页请求
+            :return:
+            """
+            r1 = requests.get(url_)
+            x_next_page_ = r1.headers["X-Next-Page"] if r1.status_code == 200 else ""
+            if r1.content == b'Retry later\n':
+                print("Exception get_commits: {0}->{1}".format(project_name, branch_name))
+                return
+            r2 = r1.json()
+            for r3 in r2:
+                if not isinstance(r3, dict):
+                    print("exception:", project_name, branch_name)
+                    continue
+                commit_id = r3.get("id")
+                if not commit_id or commit_id in self.commit_set:
+                    continue
+                else:
+                    # 在这里进行commit去重判断, 已经统计过的commit不再重复统计
+                    self.commit_set.add(commit_id)
+
+                # 这里开始获取单次提交详情，detail 为 CommitDetails对象
+                detail = None
+                while detail is None:
+                    detail = get_commit_detail(project_id, commit_id)
+                    if isinstance(detail, int):
+                        detail = None if detail < 0 else gitlab.CommitDetails()
+                    if detail:
+                        pass
+                # 过滤异常数据，单次提交大于5000行的代码，可能是脚手架之类生成的代码，不做处理
+                if detail.total == 0 or detail.total > 5000:
+                    continue
+
+                # 根据email纬度，统计提交数据
+                exist_detail = detail_map.get(detail.author_email)
+                if not exist_detail:
+                    detail.commit_nums = 1
+                    detail_map[detail.author_email] = detail
+                else:
+                    exist_detail.total += detail.total
+                    exist_detail.additions += detail.additions
+                    exist_detail.deletions += detail.deletions
+                    exist_detail.commit_nums += 1
+                    detail_map[detail.author_email] = exist_detail
+            return x_next_page_
+
         since_date = config.date_from.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
         until_date = config.date_end.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
-        url = parse.urljoin(
-            config.git_root_url,
-            "/api/v4/projects/{0}/repository/commits?"
-            "page=1&per_page=1000&ref_name={1}&since={2}&until={3}&private_token={4}".format(
-                project_id, branch_name, since_date, until_date, config.git_token)
-        )
-        r1 = requests.get(url)
-        if r1.content == b'Retry later\n':
-            print("Exception get_commits: {0}->{1}".format(project_name, branch_name))
-            return
-        r2 = r1.json()
+
+        # per_page默认值20，最大值100，参考文档：https://docs.gitlab.com/ee/api/rest/
+        # x-total和x-total-pages，在项目提交数据量超过1w条的时候不返回，参考文档：https://docs.gitlab.com/ee/api/rest/index.html#pagination-response-headers
+        x_next_page = 1
         detail_map = {}
-
-        for r3 in r2:
-            if not isinstance(r3, dict):
-                print("exception:", project_name, branch_name)
-                continue
-            commit_id = r3.get("id")
-            if not commit_id or commit_id in self.commit_set:
-                continue
-            else:
-                # 在这里进行commit去重判断, 已经统计过的commit不再重复统计
-                self.commit_set.add(commit_id)
-
-            # 这里开始获取单次提交详情，detail 为 CommitDetails对象
-            detail = None
-            while detail is None:
-                detail = get_commit_detail(project_id, commit_id)
-                if isinstance(detail, int):
-                    detail = None if detail < 0 else gitlab.CommitDetails()
-                if detail:
-                    pass
-            # 过滤异常数据，单次提交大于5000行的代码，可能是脚手架之类生成的代码，不做处理
-            if detail.total == 0 or detail.total > 5000:
-                continue
-
-            # 根据email纬度，统计提交数据
-            exist_detail = detail_map.get(detail.author_email)
-            if not exist_detail:
-                detail.commit_nums = 1
-                detail_map[detail.author_email] = detail
-            else:
-                exist_detail.total += detail.total
-                exist_detail.additions += detail.additions
-                exist_detail.deletions += detail.deletions
-                exist_detail.commit_nums += 1
-                detail_map[detail.author_email] = exist_detail
+        while x_next_page:
+            url = _gen_commits_url(x_next_page)
+            x_next_page = _get_commits_per_page(url)
         return detail_map
 
 
@@ -250,7 +272,7 @@ def get_commit_detail(project_id, commit_id):
 
     author_email, author_name = deduplicate_name(r2['author_email'], r2['author_name'])
     #
-    if config.AUTHOR_FILTER and author_email not in config.author_filter_list:
+    if config.AUTHOR_FILTER and author_email not in config.author_filter_whitelist:
         return 3
     #
     details = gitlab.CommitDetails()
@@ -259,6 +281,13 @@ def get_commit_detail(project_id, commit_id):
     details.total = stats['total']
     details.additions = stats['additions']
     details.deletions = stats['deletions']
+
+    # 打印每次提交的detail信息
+    if config.PRINT_COMMIT_DETAIL:
+        created_at = r2.get("created_at")
+        message = r2.get("message")
+        print("commit_id: ", commit_id, "created_at:", created_at, "total: ", details.total,
+              "additions: ", details.additions, "deletions: ", details.deletions, "message:", message.strip())
     return details
 
 

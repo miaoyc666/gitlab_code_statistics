@@ -11,8 +11,8 @@ Description  : 配置模板
 
 import datetime
 
-# gitlab仓库地址
-git_root_url = ""
+# gitlab仓库地址，替换为真实地址
+git_root_url = "https://gitlab.xxx.xx"
 # 访问Token
 git_token = ""
 # 统计结果的存储目录
@@ -26,19 +26,23 @@ date_from = datetime.datetime.strptime(t_from, '%Y-%m-%d %H:%M:%S')
 # 统计的时间区间-结束日期，datetime对象
 date_end = datetime.datetime.strptime(t_end, '%Y-%m-%d %H:%M:%S')
 
-# 是否仅打印仓库列表
+# 是否仅打印仓库列表, 与FILTER_BRANCH_KEY参数组合使用
 PRINT_BRANCH_NAME = False
 # branch关键字过滤，白名单机制
 FILTER_BRANCH_KEY = []
+
+# 是否仅打印每次提交的详情
+PRINT_COMMIT_DETAIL = False
 
 # 待统计的仓库列表
 valid_project = [
 ]
 
-# 是否开启author过滤，白名单机制
+# 是否开启author过滤
 AUTHOR_FILTER = False
-# 过滤author列表
-author_filter_list = []
+# author过滤白名单
+author_filter_whitelist = [
+]
 
 # 是否开启branch过滤，白名单机制
 BRANCH_FILTER = False
