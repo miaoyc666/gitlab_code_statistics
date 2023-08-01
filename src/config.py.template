@@ -34,7 +34,7 @@ FILTER_BRANCH_KEY = []
 # 是否仅打印每次提交的详情
 PRINT_COMMIT_DETAIL = False
 
-# 待统计的仓库列表
+# 待统计的仓库列表（内容为开启PRINT_BRANCH_NAME参数后打印出来的项目列表）
 valid_project = [
 ]
 
